@@ -30,31 +30,41 @@ router.post("/", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password)
-    return res.json({ status: "error", message: "Invalid Form Submission" });
+  try {
+    const { email, password } = req.body;
+    if (!email || !password)
+      return res.json({ status: "error", message: "Invalid Form Submission" });
 
-  const user = await getUserByEmail(email);
-  console.log(user);
+    const user = await getUserByEmail(email);
+    console.log(user);
 
-  const passFromDB = user && user._id ? user.password : null;
+    const passFromDB = user && user._id ? user.password : null;
 
-  if (!passFromDB)
-    return res.json({ status: "error", message: "Invalid email or password" });
+    if (!passFromDB)
+      return res.json({
+        status: "error",
+        message: "Invalid email or password",
+      });
 
-  const result = await comparePassword(password, passFromDB);
-  if (!result)
-    return res.json({ status: "error", message: "Invalid email or password" });
+    const result = await comparePassword(password, passFromDB);
+    if (!result)
+      return res.json({
+        status: "error",
+        message: "Invalid email or password",
+      });
 
-  const accessJWT = await createAccessJWT(user.email);
-  const refreshJWT = await createRefreshJWT(user.email);
+    const accessJWT = await createAccessJWT(user.email, `${user._id}`);
+    const refreshJWT = await createRefreshJWT(user.email, user._id);
 
-  return res.json({
-    status: "success",
-    message: "Login Successfully!",
-    accessJWT,
-    refreshJWT,
-  });
+    return res.json({
+      status: "success",
+      message: "Login Successfully!",
+      accessJWT,
+      refreshJWT,
+    });
+  } catch (error) {
+    return error;
+  }
 });
 
 module.exports = router;

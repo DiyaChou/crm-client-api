@@ -12,6 +12,18 @@ const UserSchema = new Schema({
   phone: { type: String, maxlength: 10, required: true },
   email: { type: String, maxlength: 50, required: true },
   password: { type: String, required: true },
+  refreshJWT: {
+    token: {
+      type: String,
+      maxlength: 500,
+      default: "",
+    },
+    addedAt: {
+      type: Date,
+      required: true,
+      default: Date.now(),
+    },
+  },
 });
 
 UserSchema.index({ email: 1 }, { unique: true });
