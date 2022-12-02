@@ -25,6 +25,21 @@ const getUserByEmail = (email) => {
   });
 };
 
+const getUserById = (_id) => {
+  return new Promise((resolve, reject) => {
+    if (!_id) return false;
+    try {
+      UserSchema.findById(_id, (error, data) => {
+        if (error) reject(error);
+        console.log("inside UserSchema", data);
+        resolve(data);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
 const storeUserRefreshJWT = (_id, token) => {
   return new Promise((resolve, reject) => {
     try {
@@ -43,4 +58,9 @@ const storeUserRefreshJWT = (_id, token) => {
   });
 };
 
-module.exports = { insertUser, getUserByEmail, storeUserRefreshJWT };
+module.exports = {
+  insertUser,
+  getUserByEmail,
+  storeUserRefreshJWT,
+  getUserById,
+};

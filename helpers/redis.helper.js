@@ -2,9 +2,7 @@ const redis = require("redis");
 
 const setJWT = async (key, value) => {
   try {
-    console.log("inside setJWT");
     const client = redis.createClient(process.env.REDIS_URL);
-
     client.on("error", (err) => console.log("Redis Client Error", err));
     await client
       .connect()
@@ -38,7 +36,31 @@ const getJWT = async (key) => {
 
     return getk;
   } catch (err) {
-    await client.get(key);
+    await client.disconnect();
+    return err;
+  }
+};
+
+const deleteJWT = async (key) => {
+  try {
+    console.log("inside getJWT");
+    const client = redis.createClient({
+      host: "127.0.0.1",
+      port: 6379,
+    });
+
+    client.on("error", (err) => console.log("Redis Client Error", err));
+    await client
+      .connect()
+      .then(() => console.log("redis connected"))
+      .catch((err) => console.log("error", err));
+
+    let delk = await client.del(key);
+    await client.disconnect();
+
+    return delk;
+  } catch (err) {
+    await client.disconnect();
     return err;
   }
 };
@@ -46,4 +68,5 @@ const getJWT = async (key) => {
 module.exports = {
   setJWT,
   getJWT,
+  deleteJWT,
 };
