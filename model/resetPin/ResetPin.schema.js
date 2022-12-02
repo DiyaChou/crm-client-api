@@ -8,11 +8,15 @@ const ResetPinSchema = new Schema({
     minlength: 6,
     required: true,
   },
-
   email: { type: String, maxlength: 50, required: true },
+  addedAt: {
+    type: Date,
+    required: true,
+    default: Date.now(),
+  },
 });
 
-ResetPinSchema.index({ email: 1 }, { unique: true });
+// ResetPinSchema.index({ email: 1 }, { unique: true });
 
 module.exports = {
   ResetPinSchema: mongoose.model("reset_pins", ResetPinSchema),
