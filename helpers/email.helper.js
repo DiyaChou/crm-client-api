@@ -1,20 +1,18 @@
 const nodemailer = require("nodemailer");
 const { ResetPinSchema } = require("../model/resetPin/ResetPin.schema");
 
-const transporter = nodemailer.createTransport({
-  host: "smtp.ethereal.email",
-  port: 587,
-  auth: {
-    user: "merl47@ethereal.email",
-    pass: "UnbcZRsU8g56q7MUz9",
-  },
-});
-
-console.log("transporter", transporter);
-
 const send = async (info) => {
   return new Promise(async (resolve, reject) => {
     try {
+      const transporter = nodemailer.createTransport({
+        host: "smtp.ethereal.email",
+        port: 587,
+        auth: {
+          user: "merl47@ethereal.email",
+          pass: "UnbcZRsU8g56q7MUz9",
+        },
+      });
+
       let result = await transporter.sendMail(info);
       console.log("Message sent: %s", result.messageId);
       console.log("Preview URL: %s", nodemailer.getTestMessageUrl(result));

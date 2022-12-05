@@ -28,7 +28,7 @@ const ticketRouter = require("./routes/ticket.router");
 const tokenRouter = require("./routes/token.router");
 
 //Error handler
-const handleError = require("./utils/errorHandler");
+const { handleError } = require("./utils/errorHandler");
 
 //use routers
 app.use("/v1/user", userRouter);
@@ -42,6 +42,7 @@ app.use("*", (req, res, next) => {
 });
 
 app.use((error, req, res, next) => {
+  console.log(error);
   handleError(error, res);
 });
 

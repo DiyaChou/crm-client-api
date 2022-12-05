@@ -29,13 +29,14 @@ All the user API router follows `/v1/user/`
 
 All the user API router follows `/v1/ticket/`
 
-| #   | Routers                        | verbs | Progress | Is Private | Description                             |
-| --- | ------------------------------ | ----- | -------- | ---------- | --------------------------------------- |
-| 1   | `/v1/ticket`                   | GET   | TODO     | Yes        | Get all ticket for the logged in user   |
-| 2   | `/v1/ticket/{id}`              | GET   | TODO     | Yes        | Get a ticket details                    |
-| 3   | `/v1/ticket`                   | POST  | TODO     | Yes        | Create a new ticket                     |
-| 4   | `/v1/ticket/{id}`              | PUT   | TODO     | Yes        | Update ticket details ie. reply message |
-| 5   | `/v1/ticket/close-ticket/{id}` | PUT   | TODO     | Yes        | close ticket                            |
+| #   | Routers                        | verbs  | Progress | Is Private | Description                             |
+| --- | ------------------------------ | ------ | -------- | ---------- | --------------------------------------- |
+| 1   | `/v1/ticket`                   | GET    | DONE     | Yes        | Get all ticket for the logged in user   |
+| 2   | `/v1/ticket/{id}`              | GET    | DONE     | Yes        | Get a ticket details                    |
+| 3   | `/v1/ticket`                   | POST   | DONE     | Yes        | Create a new ticket                     |
+| 4   | `/v1/ticket/{id}`              | PUT    | DONE     | Yes        | Update ticket details ie. reply message |
+| 5   | `/v1/ticket/close_ticket/{id}` | PUT    | DONE     | Yes        | Update ticket status to close ticket    |
+| 6   | `/v1/ticket/{id}`              | DELETE | TODO     | Yes        | Delete a ticket                         |
 
 ### Token API Resources
 
