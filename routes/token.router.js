@@ -13,8 +13,10 @@ router.get("/", async (req, res, next) => {
     const decoded = await verifyRefreshJWT(auth[1]);
     // check if the jwt exists in db
     if (!decoded.email) return res.status(403).json({ message: "Forbidden" });
+
     const userProf = await getUserByEmail(decoded.email);
     if (!userProf._id) return res.status(403).json({ message: "Forbidden" });
+
     let tokenExp = userProf.refreshJWT.addedAt;
     const dbRefreshToken = userProf.refreshJWT.token;
 

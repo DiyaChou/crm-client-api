@@ -11,17 +11,20 @@ const userAuthorization = async (req, res, next) => {
     console.log("decoded", decoded);
     if (decoded.email) {
       const userId = await getJWT(auth[1]);
-      if (!userId) return res.status(403).json({ messsage: "Forbidden" });
+      if (!userId) return res.status(403).json({ messsage: "Forbidden aa" });
       req.userId = userId;
       return next();
     }
 
     await deleteJWT(auth[1]);
-    return res.status(403).json({ message: "Forbidden" });
+    return res.status(403).json({ message: "Forbidden bb" });
     // extract user id
     // get user profile based on the userid
   } catch (error) {
-    return error;
+    console.log(error);
+    if ((error = "not a bearer token"))
+      return res.status(403).json({ message: "Forbidden err", error: error });
+    return res.status(403).json({ message: "Forbidden", error: error });
   }
 };
 

@@ -1,4 +1,5 @@
 const { token } = require("morgan");
+const { resolve } = require("path");
 const { UserSchema } = require("./User.schema");
 
 const insertUser = async (userObj) => {
@@ -74,10 +75,29 @@ const updatePassword = (email, newPassword) => {
   });
 };
 
+const verifyUser = (_id, email) => {
+  return new Promise((resolve, reject) => {
+    try {
+      UserSchema.findOneAndUpdate(
+        { _id, email, isVerified: false },
+        {
+          isVerified: true,
+        },
+        { new: true }
+      )
+        .then((data) => resolve(data))
+        .catch((err) => reject(err));
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
 module.exports = {
   insertUser,
   getUserByEmail,
   storeUserRefreshJWT,
   getUserById,
   updatePassword,
+  verifyUser,
 };

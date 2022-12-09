@@ -36,7 +36,7 @@ All the user API router follows `/v1/ticket/`
 | 3   | `/v1/ticket`                   | POST   | DONE     | Yes        | Create a new ticket                     |
 | 4   | `/v1/ticket/{id}`              | PUT    | DONE     | Yes        | Update ticket details ie. reply message |
 | 5   | `/v1/ticket/close_ticket/{id}` | PUT    | DONE     | Yes        | Update ticket status to close ticket    |
-| 6   | `/v1/ticket/{id}`              | DELETE | TODO     | Yes        | Delete a ticket                         |
+| 6   | `/v1/ticket/{id}`              | DELETE | DONE     | Yes        | Delete a ticket                         |
 
 ### Token API Resources
 

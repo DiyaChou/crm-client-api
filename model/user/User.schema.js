@@ -24,6 +24,12 @@ const UserSchema = new Schema({
       default: Date.now(),
     },
   },
+  //there are better ways to verify a user than this.
+  isVerified: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
 });
 
 UserSchema.index({ email: 1 }, { unique: true });

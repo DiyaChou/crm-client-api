@@ -9,6 +9,7 @@ const {
 const {
   resetPasswordReqValidation,
   updatePasswordValidation,
+  newUserValidation,
 } = require("../middlewares/formValidation.middleware");
 const {
   setPasswordResetPin,
@@ -22,9 +23,10 @@ const {
   getUserById,
   updatePassword,
   storeUserRefreshJWT,
+  verifyUser,
 } = require("../model/user/User.model");
 const { UserSchema } = require("../model/user/User.schema");
-
+const verificationURL = `http://localhost:3000/verification/`;
 router.all("/", (req, res, next) => {
   // res.json({ message: "return from user route" });
   next();
@@ -35,16 +37,20 @@ router.get("/", userAuthorization, async (req, res) => {
 
   const userProf = await getUserById(_id);
   console.log("inside router userProf", userProf);
-  // const { password, ...rest } = userProf;
-  // return res.json({ user: rest });
-  return res.json({ user: userProf });
+  const { name, email } = userProf;
+  return res.json({
+    user: {
+      _id,
+      name,
+      email,
+    },
+  });
 });
 
-router.post("/", async (req, res) => {
+router.post("/", newUserValidation, async (req, res) => {
   const { name, company, address, phone, email, password } = req.body;
   try {
     const hashedPass = await hashPassword(password);
-    console.log("hashedPass", hashedPass);
     const newUserObj = {
       name,
       company,
@@ -53,11 +59,53 @@ router.post("/", async (req, res) => {
       email,
       password: hashedPass,
     };
-    const result = await insertUser(newUserObj);
-    console.log("result", result);
-    res.json({ message: "New User created", result });
+    const user = await insertUser(newUserObj);
+    const userInfo = {
+      name: user.name,
+      company: user.company,
+      address: user.address,
+      phone: user.phone,
+      email: user.email,
+    };
+    //check verification
+
+    await emailProcessor({
+      email,
+      type: "new-user-confirmation-required",
+      verificationLink: verificationURL + user._id + "/" + user.email,
+    })
+      .then(() => console.log(1))
+      .catch((err) => console.log("error emailProcessor", err));
+
+    res.json({
+      status: "success",
+      message: "New User created",
+      result: userInfo,
+    });
   } catch (err) {
+    if (err.code === 11000) {
+      err.message = `${Object.keys(err.keyValue)} Already Exists`;
+    }
     res.json({ status: "error", message: err.message });
+  }
+});
+
+//verify user after user is signed up
+router.patch("/verify", async (req, res) => {
+  try {
+    const { _id, email } = req.body;
+    console.log(_id, email);
+    const result = await verifyUser(_id, email);
+    //update our user database
+    if (result.id) {
+      return res.json({
+        status: "success",
+        message: "Your account has been activated, you may sign in now.",
+      });
+    }
+    res.json({ status: "error", message: "Invalid request" });
+  } catch (error) {
+    res.json({ status: "error", message: error.message });
   }
 });
 
@@ -95,7 +143,7 @@ router.post("/login", async (req, res) => {
       refreshJWT,
     });
   } catch (error) {
-    return error;
+    return res.json({ error });
   }
 });
 
